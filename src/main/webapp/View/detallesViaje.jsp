@@ -83,7 +83,6 @@
     <a href="${pageContext.request.contextPath}/ReservarAsientoServlet?action=formularioReserva&idsViaje=${idViajes}">Realizar
         reserva de asiento</a>
 </div>
-
 <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <script>

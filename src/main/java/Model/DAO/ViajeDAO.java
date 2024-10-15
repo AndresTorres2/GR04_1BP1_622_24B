@@ -35,7 +35,6 @@ public class ViajeDAO extends GenericDAO{
         }
         return resultList;
     }
-
     public Viaje obtenerViajePorCodigo(int codigo) {
         try {
             Viaje viaje = em.find(Viaje.class, codigo);

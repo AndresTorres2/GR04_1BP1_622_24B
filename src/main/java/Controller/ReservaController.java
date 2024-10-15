@@ -43,7 +43,6 @@ public class ReservaController extends HttpServlet {
 
     private void ruteador(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = (request.getParameter("action") == null) ? "listar" : request.getParameter("action");
-
         switch (action) {
             case "guardarReserva":
                 guardarReserva(request, response);
@@ -69,10 +68,8 @@ public class ReservaController extends HttpServlet {
     }
 
     private void mostrarFormularioReserva(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String viajesIds = request.getParameter("idsViaje");
         List<Integer> viajesIdList = new ArrayList<>();
-
         if (viajesIds != null && !viajesIds.isEmpty()) {
 
             String[] idArray = viajesIds.split(",");
@@ -84,13 +81,10 @@ public class ReservaController extends HttpServlet {
             }
         }
         List<Viaje> viajesList = new ArrayList<>();
-
         // Iterar sobre la lista de IDs de viajes
         for (Integer idViaje : viajesIdList) {
             // Obtener el objeto Viaje a partir del ID
             Viaje viaje = viajeDAO.obtenerViajePorCodigo(idViaje);
-
-
             if (viaje != null) {
                 viajesList.add(viaje);
             } else {
@@ -100,12 +94,8 @@ public class ReservaController extends HttpServlet {
         for (Viaje viaje : viajesList) {
             System.out.println("ID Viaje: " + viaje.getId() + ", Asientos Ocupados: " + viaje.getAsientosOcupados());
         }
-
         request.setAttribute("viajesList", viajesList);
-
         request.getRequestDispatcher("/View/reservarAsiento.jsp").forward(request, response);
-
-
     }
 
     private void guardarReserva(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

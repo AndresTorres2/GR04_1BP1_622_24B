@@ -9,24 +9,18 @@ import java.sql.Date;
 public class Reserva implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-
     @ManyToOne
     @JoinColumn(name = "viajeId", nullable = false)
     private Viaje viaje;
-
     @ManyToOne
     @JoinColumn(name = "estudianteId", nullable = false)
     private Estudiante estudiante;
-
     @Column(name = "fecha", nullable = false)
     private Date fecha;
-
-
     public Reserva() {
     }
 

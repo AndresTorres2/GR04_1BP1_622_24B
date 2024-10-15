@@ -70,7 +70,7 @@
   <c:set var="fechaAnterior" value="" />
   <c:forEach var="reserva" items="${reservas}">
     <c:if test="${reserva.fecha != fechaAnterior}">
-      <h2>Reservas para el día: <fmt:formatDate value="${reserva.fecha}" pattern="EEEE"/></h2>
+      <h2>Reservas para el día: <fmt:formatDate value="${reserva.viaje.fecha}" pattern="EEEE"/></h2>
       <c:set var="fechaAnterior" value="${reserva.fecha}" />
     </c:if>
     <div class="reserva">

@@ -31,7 +31,6 @@ public class CalleDAO extends GenericDAO {
         }
         return calles;
     }
-
     public List<Object[]> obtenerCallesYCoordenadasPorRutaId(int rutaId) {
         List<Object[]> callesConCoordenadas = new ArrayList<>();
         try {

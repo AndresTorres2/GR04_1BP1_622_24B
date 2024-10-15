@@ -26,18 +26,14 @@ public class ViajeController extends HttpServlet {
 
     public void listarViajes(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String jornada = req.getParameter("jornada");
-        List<Object[]> viajes = new ArrayList<>();
+        /*List<Object[]> viajes = new ArrayList<>();
 
         if (jornada != null && !jornada.isEmpty()) {
             viajes = viajeDAO.listarViajesPorJornada(jornada);
-        }
-        for (Object[] viaje : viajes) {
-            for (Object campo : viaje) {
-                System.out.println(" - " + campo);
-            }
-        }
+        }*/
+
         req.setAttribute("jornada", jornada);
-        req.setAttribute("viajes", viajes);
+        req.setAttribute("viajes", viajeDAO.listarViajesPorJornada(jornada));
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("View/listarViajes.jsp");
         dispatcher.forward(req, resp);
@@ -95,7 +91,7 @@ public class ViajeController extends HttpServlet {
     }
 
     public void ruteador(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String ruta = (req.getParameter("ruta") == null) ? "listarCliente" : req.getParameter("ruta");
+        String ruta = (req.getParameter("ruta") == null) ? "seleccionarJornada" : req.getParameter("ruta");
         switch (ruta) {
             case "seleccionarJornada":
                 this.listarViajes(req, resp);
