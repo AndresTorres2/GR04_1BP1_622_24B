@@ -5,6 +5,7 @@ import Model.Entity.Estudiante;
 import Model.Entity.Viaje;
 import jakarta.persistence.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +75,26 @@ public class ReservaDAO extends GenericDAO {
         }
 
     }
+    public List<Reserva> obtenerReservasPorDia(int diaSeleccionado) {
+        List<Reserva> reservasFiltradas = new ArrayList<>();
+        for (Reserva  reserva : obtenerTodasLasReservas())
+        {
+            int diaReserva = reserva.getViaje().getFecha().getDay();
+            if(diaReserva == diaSeleccionado){
+                reservasFiltradas.add(reserva);
+            }
+        }
+
+        return reservasFiltradas;
+    }
+
+    public void guardarVariasReservas(List<Viaje> listaViajes, Estudiante estudiante) {
+        for (Viaje viaje : listaViajes) {
+            Reserva reserva = new Reserva(0, viaje, estudiante, new Date(System.currentTimeMillis()));
+            guardarReserva(reserva, viaje);
+        }
+    }
+
 
 
 

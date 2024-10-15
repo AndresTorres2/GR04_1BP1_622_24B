@@ -4,6 +4,7 @@ import Model.Entity.Viaje;
 import jakarta.persistence.Query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ViajeDAO extends GenericDAO{
@@ -47,5 +48,49 @@ public class ViajeDAO extends GenericDAO{
             return null;
         }
     }
+
+    public int[] convertirIdsAEnteros(String[] idsViajesSeleccionados) {
+        if (idsViajesSeleccionados != null) {
+            return Arrays.stream(idsViajesSeleccionados)
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+        }
+        return new int[0];
+    }
+    public List<Viaje> obtenerListaDeViajes(String[] idsViajes) {
+        List<Viaje> listaViajes = new ArrayList<>();
+        for (int id : convertirIdsAEnteros(idsViajes)) {
+                listaViajes.add(obtenerViajePorCodigo(id));
+        }
+        return listaViajes;
+    }
+
+
+    public List<Integer> convertirCadenaAListaDeIds(String idsViajes) {
+        List<Integer> viajesIdList = new ArrayList<>();
+
+        if (idsViajes != null && !idsViajes.isEmpty()) {
+            String[] idArray = idsViajes.split(",");
+            for (String id : idArray) {
+                try {
+                    viajesIdList.add(Integer.parseInt(id.trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("ID inválido: " + id);
+                }
+            }
+        }
+        return viajesIdList;
+    }
+
+    public List<Viaje> obtenerViajesPorIds(String idsViajes) {
+        List<Viaje> viajesList = new ArrayList<>();
+        for (Integer idViaje : convertirCadenaAListaDeIds(idsViajes)) {
+                viajesList.add(obtenerViajePorCodigo(idViaje));
+        }
+
+        return viajesList;
+    }
+
+
 
 }

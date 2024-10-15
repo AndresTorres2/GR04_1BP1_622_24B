@@ -68,64 +68,16 @@ public class ReservaController extends HttpServlet {
     }
 
     private void mostrarFormularioReserva(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String viajesIds = request.getParameter("idsViaje");
-        List<Integer> viajesIdList = new ArrayList<>();
-        if (viajesIds != null && !viajesIds.isEmpty()) {
 
-            String[] idArray = viajesIds.split(",");
-
-
-            for (String id : idArray) {
-                viajesIdList.add(Integer.parseInt(id.trim()));
-
-            }
-        }
-        List<Viaje> viajesList = new ArrayList<>();
-        // Iterar sobre la lista de IDs de viajes
-        for (Integer idViaje : viajesIdList) {
-            // Obtener el objeto Viaje a partir del ID
-            Viaje viaje = viajeDAO.obtenerViajePorCodigo(idViaje);
-            if (viaje != null) {
-                viajesList.add(viaje);
-            } else {
-                System.out.println("No se encontró el viaje con ID: " + idViaje);
-            }
-        }
-        for (Viaje viaje : viajesList) {
-            System.out.println("ID Viaje: " + viaje.getId() + ", Asientos Ocupados: " + viaje.getAsientosOcupados());
-        }
-        request.setAttribute("viajesList", viajesList);
+        request.setAttribute("viajesList", viajeDAO.obtenerViajesPorIds(request.getParameter("idsViaje")));
         request.getRequestDispatcher("/View/reservarAsiento.jsp").forward(request, response);
     }
 
     private void guardarReserva(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String[] viajesIdsSeleccionados = request.getParameterValues("idsViajesSeleccionados");
-        List<Viaje> listaViajes = new ArrayList<>();
         Estudiante estudiante = estudianteDAO.obtenerEstudiantePorId("202110777");
-        if (viajesIdsSeleccionados != null) {
-            int[] idsViajesEnteros = Arrays.stream(viajesIdsSeleccionados)
-                    .mapToInt(Integer::parseInt)
-                    .toArray();
-
-            ViajeDAO viajeDAO = new ViajeDAO();  // Asegúrate de que el DAO está correctamente inicializado
-
-            for (int id : idsViajesEnteros) {
-                Viaje viaje = viajeDAO.obtenerViajePorCodigo(id); // Método para obtener el viaje por ID
-                if (viaje != null) {
-                    listaViajes.add(viaje);
-                }
-            }
-
-        }
-        for (Viaje viaje : listaViajes) {
-
-            Reserva reserva = new Reserva(0, viaje, estudiante, new Date(System.currentTimeMillis()));
-            reservaDAO.guardarReserva(reserva, viaje);
-        }
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
+        List<Viaje> listaViajes = viajeDAO.obtenerListaDeViajes(viajesIdsSeleccionados);
+        reservaDAO.guardarVariasReservas(listaViajes, estudiante);
 
         response.sendRedirect(request.getContextPath() + "/View/listarViajes.jsp");
 
@@ -133,20 +85,9 @@ public class ReservaController extends HttpServlet {
     }
 
     private void verReservasDia(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String diaSeleccionado = request.getParameter("dia");
-        List<Reserva> reservas = reservaDAO.obtenerTodasLasReservas();
-        List<Reserva> reservasFiltradas = new ArrayList<>();
-        for (Reserva reserva : reservas) {
 
-            String diaReserva = String.valueOf(reserva.getViaje().getFecha().getDay());
 
-            if (diaReserva.equals(diaSeleccionado)) {
-                reservasFiltradas.add(reserva);
-            }
-        }
-
-        request.setAttribute("reservas", reservasFiltradas);
-
+        request.setAttribute("reservas", reservaDAO.obtenerReservasPorDia(Integer.parseInt(request.getParameter("dia"))));
         request.getRequestDispatcher("/View/consultarReservas.jsp").forward(request, response);
     }
 
@@ -179,15 +120,9 @@ public class ReservaController extends HttpServlet {
     }
 
     private void cancelarReserva(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int reservaId = Integer.parseInt(request.getParameter("reservaId"));
-        Reserva reserva = reservaDAO.obtenerReservaPorId(reservaId);
-        Viaje viaje = viajeDAO.obtenerViajePorCodigo(reserva.getViaje().getId());
 
-
-        reservaDAO.cancelarReserva(reservaId, viaje);
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
+        reservaDAO.cancelarReserva(Integer.parseInt(request.getParameter("reservaId")),
+                reservaDAO.obtenerReservaPorId(Integer.parseInt(request.getParameter("reservaId"))).getViaje());
         response.sendRedirect(request.getContextPath() + "/ReservarAsientoServlet?action=consultarReservas");
 
     }

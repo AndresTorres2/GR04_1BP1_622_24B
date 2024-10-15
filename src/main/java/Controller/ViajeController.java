@@ -25,10 +25,8 @@ public class ViajeController extends HttpServlet {
     }
 
     public void listarViajes(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String jornada = req.getParameter("jornada");
 
-        req.setAttribute("jornada", jornada);
-        req.setAttribute("viajes", viajeDAO.listarViajesPorJornada(jornada));
+        req.setAttribute("viajes", viajeDAO.listarViajesPorJornada(req.getParameter("jornada")));
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("View/listarViajes.jsp");
         dispatcher.forward(req, resp);
