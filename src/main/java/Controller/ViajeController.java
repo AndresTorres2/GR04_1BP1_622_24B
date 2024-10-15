@@ -26,11 +26,6 @@ public class ViajeController extends HttpServlet {
 
     public void listarViajes(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String jornada = req.getParameter("jornada");
-        /*List<Object[]> viajes = new ArrayList<>();
-
-        if (jornada != null && !jornada.isEmpty()) {
-            viajes = viajeDAO.listarViajesPorJornada(jornada);
-        }*/
 
         req.setAttribute("jornada", jornada);
         req.setAttribute("viajes", viajeDAO.listarViajesPorJornada(jornada));
