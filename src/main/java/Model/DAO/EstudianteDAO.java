@@ -7,13 +7,7 @@ public class EstudianteDAO extends GenericDAO {
 
 
     public Estudiante obtenerEstudiantePorId(String idEstudiante) {
-        Estudiante estudiante = null;
-        try {
-            estudiante = em.find(Estudiante.class, idEstudiante);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return estudiante;
+            return em.find(Estudiante.class, idEstudiante);
     }
 
 

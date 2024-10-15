@@ -98,15 +98,8 @@ public class ReservaController extends HttpServlet {
     }
 
     private void mostrarReserva(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int reservaId = Integer.parseInt(request.getParameter("reservaId"));
-
-        Reserva reservaSeleccionada = reservaDAO.obtenerReservaPorId(reservaId);
-
-        Viaje viaje = reservaSeleccionada.getViaje();
-        Ruta ruta = viaje.getRuta();
-        int idRuta = ruta.getId();
-
-        List<Object[]> callesYCoordenadas = calleDAO.obtenerCallesYCoordenadasPorRutaId(idRuta);
+        Reserva reservaSeleccionada = reservaDAO.obtenerReservaPorId( Integer.parseInt(request.getParameter("reservaId")));
+        List<Object[]> callesYCoordenadas = calleDAO.obtenerCallesYCoordenadasPorRutaId(reservaSeleccionada.getViaje().getRuta().getId());
         request.setAttribute("callesYCoordenadas", callesYCoordenadas);
         request.setAttribute("reserva", reservaSeleccionada);
 
@@ -114,7 +107,6 @@ public class ReservaController extends HttpServlet {
             request.setAttribute("origen", callesYCoordenadas.get(0)); // Primera calle
             request.setAttribute("destino", callesYCoordenadas.get(callesYCoordenadas.size() - 1)); // Última calle
         }
-
         request.getRequestDispatcher("/View/detallesReserva.jsp").forward(request, response);
 
     }
