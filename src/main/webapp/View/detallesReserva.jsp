@@ -123,11 +123,14 @@
     var waypoints = [];
     var waypointAvailable = false;
 
+    function addMarker(latitud, longitud, popupText, icon = null) {
+        const markerOptions = icon ? { icon: icon } : {};
+        L.marker([latitud, longitud], markerOptions).addTo(map).bindPopup(popupText);
+    }
+
     <c:forEach var="calle" items="${callesYCoordenadas}">
-    var latitud = ${calle[2]};
-    var longitud = ${calle[3]};
-    waypoints.push(L.latLng(latitud, longitud));
-    L.marker([latitud, longitud]).addTo(map).bindPopup('${calle[1]}');
+    waypoints.push(L.latLng(${calle[2]}, ${calle[3]}));
+    addMarker(${calle[2]}, ${calle[3]}, '${calle[1]}');
     </c:forEach>
 
     var routingControl = L.Routing.control({
@@ -149,17 +152,16 @@
         iconSize: [25, 41],
     });
 
-
     var busIcon = L.icon({
         iconUrl: "${pageContext.request.contextPath}/assets/busIcon.png",
         iconSize: [40, 40],
     });
-    L.marker([-0.332250, -78.553271], {icon: busIcon}).addTo(map);
+
+    addMarker(-0.332250, -78.553271, null, busIcon);
 
     map.on('click', function (e) {
         if (waypointAvailable) {
-            var newWaypoint = L.latLng(e.latlng.lat, e.latlng.lng);
-            L.marker(newWaypoint, {icon: paradaIcon}).addTo(map);
+            addMarker(e.latlng.lat, e.latlng.lng, null, paradaIcon);
             waypointAvailable = false;
         }
     });
@@ -168,7 +170,6 @@
         alert('Haz clic en el mapa para agregar un nuevo waypoint. Solo se podrá agregar uno.');
         waypointAvailable = true;
     });
-
 
 </script>
 </body>
