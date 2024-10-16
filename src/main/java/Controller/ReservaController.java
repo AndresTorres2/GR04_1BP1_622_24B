@@ -98,7 +98,8 @@ public class ReservaController extends HttpServlet {
     }
 
     private void mostrarReserva(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Reserva reservaSeleccionada = reservaDAO.obtenerReservaPorId( Integer.parseInt(request.getParameter("reservaId")));
+        int reservaId = Integer.parseInt(request.getParameter("reservaId"));
+        Reserva reservaSeleccionada = reservaDAO.obtenerReservaPorId(reservaId);
         List<Object[]> callesYCoordenadas = calleDAO.obtenerCallesYCoordenadasPorRutaId(reservaSeleccionada.getViaje().getRuta().getId());
         request.setAttribute("callesYCoordenadas", callesYCoordenadas);
         request.setAttribute("reserva", reservaSeleccionada);
